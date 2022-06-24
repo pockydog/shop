@@ -34,6 +34,7 @@ services:
       dockerfile: Dockerfile
     container_name: vicky
     image: product
+    env_file: dev.env
     ports:
       - '8022:5000'
     tty: true
