@@ -17,9 +17,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(90))
     account = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(90), nullable=False)
+    password = db.Column(db.String(50), nullable=False)
     level_id = db.Column(db.Integer, db.ForeignKey('level.id'), server_default='1')
-    phone_number = db.Column(db.String(90), nullable=False)
+    phone_number = db.Column(db.String(50), nullable=False)
+    is_block = db.Column(db.Boolean, server_default='0', comment='是否開啟：0:否 1:是')
     remark = db.Column(db.String(100))
     create_datetime = db.Column(db.DateTime, server_default=func.now())
     update_datetime = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
@@ -28,15 +29,11 @@ class User(db.Model):
 class ProductType(db.Model):
     __tablename__ = 'product_type'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(900), nullable=False)
-    short_name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    short_name = db.Column(db.String(50), nullable=False)
     code = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String(1000))
-    is_open = db.Column(db.Boolean, server_default='0', comment='是否開啟：0:否 1:是')
-    stock = db.Column(db.Integer)
-    is_delete = db.Column(db.Boolean, comment='是否開啟：0:否 1:是')
-    remark = db.Column(db.String(100), nullable=False, comment='備註')
-
+    remark = db.Column(db.String(100), comment='備註')
     create_datetime = db.Column(db.DateTime, server_default=func.now())
     update_datetime = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
@@ -45,13 +42,15 @@ class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Integer)
     description = db.Column(db.String(1000))
     discount_id = db.Column(db.Integer, db.ForeignKey('discount.id'))
     product_type_id = db.Column(db.Integer, db.ForeignKey('product_type.id'))
+    stock = db.Column(db.Integer, nullable=False)  # 庫存
+    sale_price = db.Column(db.Integer, nullable=False)
+    cost_price = db.Column(db.Integer, nullable=False)
+    is_open = db.Column(db.Boolean, server_default='0', comment='是否開啟：0:否 1:是')  # 是否開
+    is_delete = db.Column(db.Boolean, comment='是否開啟：0:否 1:是')  # 是否下架
     remark = db.Column(db.String(100), nullable=False, comment='備註')
-    remark = db.Column(db.String(100), nullable=False, comment='備註')
-
     create_datetime = db.Column(db.DateTime, server_default=func.now())
     update_datetime = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
@@ -63,7 +62,6 @@ class ProductPic(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     description = db.Column(db.String(1000))
     remark = db.Column(db.String(100), nullable=False, comment='備註')
-
     create_datetime = db.Column(db.DateTime, server_default=func.now())
     update_datetime = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
@@ -71,12 +69,11 @@ class ProductPic(db.Model):
 class Delivery(db.Model):
     __tablename__ = 'delivery'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(900), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Integer)
     description = db.Column(db.String(500))
     is_active = db.Column(db.Boolean, server_default='0', comment='是否開啟：0:否 1:是')
     remark = db.Column(db.String(100), nullable=False, comment='備註')
-
     create_datetime = db.Column(db.DateTime, server_default=func.now())
     update_datetime = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
@@ -87,11 +84,10 @@ class Discount(db.Model):
     name = db.Column(db.String(100))
     price = db.Column(db.Integer)
     level_id = db.Column(db.Integer, db.ForeignKey('level.id'))
-    open_date = db.Column(db.DateTime, server_default=None)
-    end_date = db.Column(db.DateTime, server_default=None)
+    open_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
     is_active = db.Column(db.Boolean, server_default='0', comment='是否開啟：0:否 1:是')
     remark = db.Column(db.String(100), nullable=False, comment='備註')
-
     create_datetime = db.Column(db.DateTime, server_default=func.now())
     update_datetime = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
@@ -99,7 +95,8 @@ class Discount(db.Model):
 class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    price = db.Column(db.Integer)
+    product_price = db.Column(db.Integer, nullable=False)
+    delivery_price = db.Column(db.Integer, nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     discount_id = db.Column(db.Integer, db.ForeignKey('discount.id'))
@@ -108,8 +105,8 @@ class Order(db.Model):
     township = db.Column(db.String(50), nullable=False, comment='鄉鎮區')
     road = db.Column(db.String(50), nullable=False, comment='地址')
     remark = db.Column(db.String(100), nullable=False, comment='備註')
-    status = db.Column(db.Integer, nullable=False, server_default='1',
-                       comment='1: 已下訂, 2: 付款失敗, 3: 逾期 未付款, 4: 付款成功, 5: 已出貨, 6: 已送達, 7: 退貨, 8: 退款完成')
+    status = db.Column(db.Integer, nullable=False, server_default='0',
+                       comment='0:處理中 1: 成功, 2:失敗, 3：已寄出')
     create_datetime = db.Column(db.DateTime, server_default=func.now())
     update_datetime = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
