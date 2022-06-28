@@ -6,8 +6,10 @@ class Test:
     @classmethod
     def add_info(cls):
         url = cls.url
-        response = requests.post(url=url)
-        print(response.text)
+        member = ['Newbie', 'Registered', 'Advanced', 'Respectful', 'VIP']
+        for i in member:
+            response = requests.post(url=url, params={'name': f'{i}'})
+            print(response.text)
 
     @classmethod
     def del_info(cls):

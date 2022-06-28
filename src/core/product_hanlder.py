@@ -1,8 +1,8 @@
 from modles.product_models import ProductType
 from app import db
 
-class ProductTypeHanlders:
 
+class ProductTypeHanlders:
     @classmethod
     def get_info(cls):
         conditions = list()
@@ -16,7 +16,7 @@ class ProductTypeHanlders:
                 'code': product.code,
             }
             results.append(result)
-        return result
+        return results
 
     @classmethod
     def add_info(cls, name, type_, code):
@@ -27,4 +27,4 @@ class ProductTypeHanlders:
         )
         db.session.add(product)
         db.session.commit()
-        return {'ok': 'ok'}
+        return {'ok: ok'}

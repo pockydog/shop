@@ -13,14 +13,15 @@ class Test:
 
     @classmethod
     def add_info(cls):
-        payload = {
-            'name': f'{fake.first_name()}',
-            'account': f'{fake.unix_time()}',
-            'password': f'{fake.unix_time()}',
-            'phone_number': f'{fake.phone_number()}',
-        }
-        response = requests.post(url=cls._URL, json=payload)
-        print(response.text)
+        for i in range(10):
+            payload = {
+                'name': f'{fake.first_name()}',
+                'account': f'{fake.unix_time()}',
+                'password': f'{fake.unix_time()}',
+                'phone_number': f'{fake.phone_number()}',
+            }
+            response = requests.post(url=cls._URL, json=payload)
+            print(response.text)
 
     @classmethod
     def del_info(cls):

@@ -18,7 +18,8 @@ def add_level_info():
     """
     新增資料
     """
-    result = LevelHanlder.add_info(name='VIP')
+    name = request.args.get('name')
+    result = LevelHanlder.add_info(name=name)
     return jsonify(result=result)
 
 

@@ -1,4 +1,4 @@
-from modles.product_models import User
+from models.product_models import User
 from app import db
 
 

@@ -1,4 +1,4 @@
-from modles.product_models import Level
+from models.product_models import Level
 from app import db
 
 
