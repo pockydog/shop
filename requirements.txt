@@ -1,10 +1,9 @@
 requests==2.27.1
-BeautifulSoup4~=4.11.1
+BeautifulSoup4==4.11.1
 schema==0.7.5
 tqdm==4.64.0
 flask==2.1.2
-flask_sqlalchemy
-SQLAlchemy=1.4.36
-
-
+Flask-SQLAlchemy==2.5.1
+SQLAlchemy==1.4.36
 Faker==13.12.1
+PyMySQL==1.0.2

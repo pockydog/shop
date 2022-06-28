@@ -5,6 +5,7 @@ fake = Faker()
 
 class Test:
     _URL = 'http://127.0.0.1:5000/user'
+
     @classmethod
     def get_info(cls):
         response = requests.get(url=cls._URL)

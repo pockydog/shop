@@ -1,15 +1,11 @@
-# from test.user_test import Test
-#
-#
-# if __name__ == "__main__":
-#     Test.get_info()
 from app import db
 from modles.product_models import Order, User, Product
 
 
+
 class OrderHandler:
     @classmethod
-    def get_info(cls):
+    def get_info(cls, username):
         orders = db.session.query(
             Order.id,
             Order.price,
@@ -23,7 +19,3 @@ class OrderHandler:
         ).all()
         for order in orders:
             print(order)
-
-
-if __name__ == '__main__':
-    OrderHandler.get_info()
