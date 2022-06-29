@@ -21,7 +21,7 @@ def add_user_info():
     payload = request.get_json()
     result = UserHanlder.add_info(
         name=payload['name'],
-        account=payload['account'],
+        username=payload['username'],
         password=payload['password'],
         phone_number=payload['phone_number'],
     )

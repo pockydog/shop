@@ -1,7 +1,7 @@
 a = input(str(':'))
 print(a)
 
-check =
+# check =
 # class Test:
 #     @classmethod
 #     def testt(cls):

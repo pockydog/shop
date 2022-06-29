@@ -14,7 +14,7 @@ class UserHanlder:
             result = {
                 'id': user.id,
                 'name': user.name,
-                'account': user.account,
+                'username': user.username,
                 'password': user.password,
                 'level_id': user.level_id,
                 'phone_number': user.phone_number,
@@ -25,24 +25,24 @@ class UserHanlder:
         return results
 
     @classmethod
-    def add_info(cls, name, account, password, phone_number):
-        if not isinstance(name, str) and isinstance(account, str) and isinstance(password, int) and isinstance(phone_number, str):
+    def add_info(cls, name, username, password, phone_number):
+        if not isinstance(name, str) and isinstance(username, str) and isinstance(password, int) and isinstance(phone_number, str):
             raise ValueError('wrong format .')
         user = User(
             name=name,
-            account=account,
+            username=username,
             password=password,
             phone_number=phone_number,
         )
         if not user:
-            raise ValueError('Not  ')
+            raise ValueError('info error ')
 
         db.session.add(user)
         db.session.commit()
         results = {
             'id': user.id,
             'name': user.name,
-            'account': user.account,
+            'username': user.username,
             'password': user.password,
             'phone_number': user.phone_number,
             'level_id': user.level_id,
@@ -64,12 +64,12 @@ class UserHanlder:
         return {'success': True}
 
     @classmethod
-    def update_info(cls, account, phone_number, password):
-        if not isinstance(account, str):
+    def update_info(cls, username, phone_number, password):
+        if not isinstance(username, str):
             raise ValueError('Account wrong format . ')
-        user = db.session.query(User).filter(User.account == account).first()
+        user = db.session.query(User).filter(User.username == username).first()
         if not user:
-            raise ValueError('Account not exist . ')
+            raise ValueError('Username not exist . ')
         if not isinstance(phone_number, str):
             raise ValueError('Phone Number wrong format . ')
         if not isinstance(password, str):
@@ -80,7 +80,7 @@ class UserHanlder:
         result = {
             'id': user.id,
             'name': user.name,
-            'account': user.account,
+            'username': user.username,
             'password': user.password,
             'phone_number': user.phone_number,
             'level_id': user.level_id,

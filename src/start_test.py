@@ -1,4 +1,4 @@
-from test.user_test import *
+from test.product_test import *
 
 
 if __name__ == "__main__":
