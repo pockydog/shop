@@ -26,19 +26,17 @@ class UserHanlder:
 
     @classmethod
     def add_info(cls, name, username, password, phone_number):
-        if not isinstance(name, str) and isinstance(username, str) and isinstance(password, int) and isinstance(phone_number, str):
-            raise ValueError('wrong format .')
+        if not isinstance(name, str) and not isinstance(username, str) and not isinstance(password, int) \
+                and not isinstance(phone_number, str):
+            raise ValueError('wrong format')
         user = User(
             name=name,
             username=username,
             password=password,
             phone_number=phone_number,
         )
-        if not user:
-            raise ValueError('info error ')
-
         db.session.add(user)
-        db.session.commit()
+        db.session.flush()
         results = {
             'id': user.id,
             'name': user.name,
@@ -46,8 +44,12 @@ class UserHanlder:
             'password': user.password,
             'phone_number': user.phone_number,
             'level_id': user.level_id,
+            'create_datetime': user.create_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+            'update_datetime': user.update_datetime.strftime("%Y-%m-%d %H:%M:%S"),
         }
-        return results, {'success': True}
+        db.session.commit()
+
+        return results
 
     @classmethod
     def del_info(cls, name, phone_number):

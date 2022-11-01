@@ -21,9 +21,16 @@ class ProductHanlder:
 
     @classmethod
     def add_info(cls, name, description, discount_id, product_type_id, stock, sale_price, cost_price, remark):
-        if not isinstance(name, str) and not isinstance(product_type_id, int) and not isinstance(stock, int) and not \
-                isinstance(sale_price, int) and not isinstance(cost_price, int):
+        if not isinstance(name, str) and not isinstance(stock, int) and not \
+                isinstance(sale_price, int) and not isinstance(cost_price, int) \
+                and not isinstance(product_type_id, int):
             raise ValueError('Info Wrong format')
+        if not isinstance(description, str) and description is not None:
+            raise ValueError('Description Wrong format')
+        if not isinstance(discount_id, int) and discount_id is not None:
+            raise ValueError('Discount Id Wrong format')
+        if not isinstance(remark, str) and remark is not None:
+            raise ValueError('Remark Wrong format')
         product_type = db.session.query(ProductType).filter(ProductType.id == product_type_id).first()
         if not product_type:
             raise ValueError('product type not found')
@@ -57,11 +64,25 @@ class ProductHanlder:
             'sale_price': sale_price,
             'cost_price': cost_price,
             'remark': remark,
+            'create_datetime': product.create_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+            'update_datetime': product.update_datetime.strftime("%Y-%m-%d %H:%M:%S"),
         }
         db.session.commit()
         return result
 
 
-    # @classmethod
-    # def del_info(cls):
-    #     product = db.session.query(ProductType).filter
+    @classmethod
+    def del_info(cls, product_id):
+        if not product_id:
+            raise ValueError('id not found')
+        product = db.session.query(Product).filter(
+            Product.is_delete.is_(False),
+            Product.id == product_id,
+        ).first()
+        if not product:
+            raise ValueError('product not exist')
+        product.is_delete = True
+        db.session.commit()
+        return {'Success': 'True'}
+
+

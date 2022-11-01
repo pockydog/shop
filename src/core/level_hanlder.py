@@ -4,11 +4,14 @@ from app import db
 
 class LevelHanlder:
     @classmethod
-    def add_info(cls, name):
+    def add_info(cls, name, remark):
         if not isinstance(name, str):
-            raise ValueError('wrong format')
+            raise ValueError('Name wrong format')
+        if not isinstance(remark, str) and remark is not None:
+            raise ValueError('Remark wrong format')
         level = Level(
             name=name,
+            remark=remark
         )
         db.session.add(level)
         db.session.commit()
@@ -20,7 +23,14 @@ class LevelHanlder:
         results = list()
         if name:
             conditions.append(Level.name == name)
-        levels = db.session.query(Level).filter(*conditions).all()
+
+        levels = Level.query.filter(
+            *conditions
+        ).order_by(
+            Level.priority
+        ).all()
+        print(levels)
+
         for level in levels:
             result = {
                 'id': level.id,

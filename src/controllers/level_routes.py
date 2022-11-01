@@ -18,8 +18,10 @@ def add_level_info():
     """
     新增資料
     """
-    name = request.args.get('name')
-    result = LevelHanlder.add_info(name=name)
+    payload = request.get_json()
+    name = payload['name']
+    remark = payload['remark']
+    result = LevelHanlder.add_info(name=name, remark=remark)
     return jsonify(result=result)
 
 

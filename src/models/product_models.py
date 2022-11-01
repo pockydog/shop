@@ -44,7 +44,7 @@ class Product(db.Model):
     name = db.Column(db.String(100), nullable=False, comment='商品名稱')
     description = db.Column(db.Text, comment='商品描述')
     discount_id = db.Column(db.Integer, db.ForeignKey('discount.id'), comment='折扣id')
-    product_type_id = db.Column(db.Integer, db.ForeignKey('product_type.id'), comment='商品分類id')
+    product_type_id = db.Column(db.Integer, db.ForeignKey('product_type.id'), nullable=False, comment='商品分類id')
     stock = db.Column(db.Integer, nullable=False, comment='庫存')
     sale_price = db.Column(db.Integer, nullable=False, comment='定價')
     cost_price = db.Column(db.Integer, nullable=False, comment='成本價')
@@ -58,7 +58,6 @@ class Product(db.Model):
 class ProductPic(db.Model):
     __tablename__ = 'product_pic'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    pic_url = db.Column(db.String(1000), comment='商品圖片檔案')
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), comment='商品id')
     description = db.Column(db.String(1000), comment='商品圖片描述')
     remark = db.Column(db.String(100), nullable=False, comment='備註')
@@ -97,15 +96,15 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     product_price = db.Column(db.Integer, nullable=False, comment='商品金額')
     delivery_price = db.Column(db.Integer, nullable=False, comment='運費金額')
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), comment='商品id')
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), comment='會員id')
-    discount_id = db.Column(db.Integer, db.ForeignKey('discount.id'), comment='折扣id')
-    delivery_id = db.Column(db.Integer, db.ForeignKey('delivery.id'), comment='費用id')
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False, comment='商品id')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, comment='會員id')
+    discount_id = db.Column(db.Integer, db.ForeignKey('discount.id'),  comment='折扣id')
+    delivery_id = db.Column(db.Integer, db.ForeignKey('delivery.id'), nullable=False, comment='費用id')
     city = db.Column(db.String(50), nullable=False, comment='縣市')
     township = db.Column(db.String(50), nullable=False, comment='鄉鎮區')
     road = db.Column(db.String(50), nullable=False, comment='地址')
-    remark = db.Column(db.String(300), nullable=False, comment='備註')
-    status = db.Column(db.Integer, nullable=False, server_default='0',
+    remark = db.Column(db.String(300), comment='備註')
+    status = db.Column(db.Integer, nullable=False,
                        comment='1:待處理 2: 處理中, 3:已寄出, 4：成功, 5:失敗')
     create_datetime = db.Column(db.DateTime, server_default=func.now())
     update_datetime = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())

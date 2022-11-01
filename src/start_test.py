@@ -1,9 +1,16 @@
-from test.product_test import *
-
-
-if __name__ == "__main__":
-    Test.add_info()
+# from test.product_test import *
+#
+#
+# if __name__ == "__main__":
+#     Test.add_info()
 from app import db
+
+from core.order_hanlder import OrderHandler
+
+
+if __name__ == '__main__':
+    OrderHandler.test_info()
+
 
 
 # class OrderHandler:
